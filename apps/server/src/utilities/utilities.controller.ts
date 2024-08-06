@@ -9,6 +9,7 @@ export class UtilityController {
   constructor(private fileService: FileService) {}
 
   private readonly RES_PDF = 'resources/pdfs/';
+  private readonly RES_IMAGE = 'resources/images/';
 
   @Get('pdf')
   @ApiResponse({
@@ -106,5 +107,20 @@ export class UtilityController {
   })
   async getImageFileList() {
     return this.fileService.getFilenames('resources/images/');
+  }
+
+  @Get('image/listdir')
+  @ApiResponse({
+    status: 200,
+    description: 'An array of all the directories within the images folder',
+    type: [String],
+  })
+  async getImageDirList(@Query('dirname') dirname?: string) {
+    if (undefined === dirname) {
+      dirname = this.RES_IMAGE;
+    } else {
+      dirname = this.RES_IMAGE + dirname;
+    }
+    return this.fileService.getFoldernames(`${dirname}`);
   }
 }
